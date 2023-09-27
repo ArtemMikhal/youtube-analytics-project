@@ -8,6 +8,7 @@ class Channel:
     YT_API_KEY = os.getenv('YT_API_KEY')
     youtube = build('youtube', 'v3', developerKey=YT_API_KEY)
 
+
     def __init__(self, channel_id: str) -> None:
         """
         Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API.
@@ -33,10 +34,57 @@ class Channel:
         self.video_count: int = int(self.json_item['statistics']['videoCount'])
         self.total_views: int = int(self.json_item['statistics']['viewCount'])
 
+
+    def __str__(self):
+        """Возвращает название и ссылку на канал по шаблону"""
+        return f"'{self.title} ({self.url})'"
+
+
+    def __add__(self, other):
+        """ Складывает количество подписчиков два канала между собой."""
+        return self.subscribers_count + other.subscribers_count
+
+
+    def __sub__(self, other):
+        """ Вычитает количество подписчиков два канала между собой."""
+        return self.subscribers_count - other.subscribers_count
+
+
+    def __gt__(self, other):
+        """ Сравнивает на каком канале большее количество подписчиков."""
+        return self.subscribers_count > other.subscribers_count
+
+
+    def __ge__(self, other):
+        """Сравнивает «больше или равно»."""
+        return self.subscribers_count >= other.subscribers_count
+
+
+    def __lt__(self, other):
+        """Сравнивает на каком канале меньшее количество подписчиков."""
+        return self.subscribers_count < other.subscribers_count
+
+
+    def __le__(self, other):
+        """Сравнивает «меньше или равно»."""
+        return self.subscribers_count <= other.subscribers_count
+
+
+    def __le__(self, other):
+        """Сравнивает «меньше или равно»."""
+        return self.subscribers_count <= other.subscribers_count
+
+
+    def __eq__(self, other):
+        """Определяет равенство."""
+        return self.subscribers_count == other.subscribers_count
+
+
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         dict_to_print = self.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         print(json.dumps(dict_to_print, indent=4, ensure_ascii=False))
+
 
     def get_youtube_json(self):
         """Возвращает словарь с данными о канале."""
@@ -44,15 +92,18 @@ class Channel:
                          indent=4, ensure_ascii=False)
         return json.loads(res)
 
+
     @property
     def channel_id(self):
         """Возвращает идентификатор канала."""
         return self.__channel_id
 
+
     @classmethod
     def get_service(cls):
         """Возвращает объект для работы с API вне класса."""
         return cls.youtube
+
 
     def to_json(self, file_name: str) -> None:
         """
@@ -78,6 +129,7 @@ class Channel:
     def channel_id(self, value):
         """Устанавливает новое значение идентификатора канала."""
         self.__channel_id = value
+
 
     def __repr__(self):
         return f'{__class__.__name__}({self.__channel_id})'
