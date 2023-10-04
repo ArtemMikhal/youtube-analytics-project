@@ -13,6 +13,7 @@ class Video:
     def __init__(self, video_id: str) -> None:
         """Конструктором класса Video."""
         self.video_id: str = video_id
+
         try:
             video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                         id=self.video_id
