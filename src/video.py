@@ -28,10 +28,8 @@ class Video:
 
         except (HttpError, ValueError) as e:
             print(f"Error: {e}")
-            self.title = None
-            self.view_count = None
-            self.like_count = None
-            self.comment_count = None
+            self.title = self.url = self.view_count = self.like_count = None
+
         video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                     id=self.video_id
                                                     ).execute()
